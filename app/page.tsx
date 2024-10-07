@@ -15,6 +15,7 @@ type Article = {
 export default function Home() {
   const [articles, setArticles] = useState<Article[]>([]); // State to hold news articles
   const [loading, setLoading] = useState<boolean>(true); // Loading state
+  const [error, setError] = useState<string | null>(null); // Error state
 
   // Fetch news articles when the component mounts
   useEffect(() => {
@@ -23,8 +24,9 @@ export default function Home() {
         const fetchedArticles = await fetchNewsArticles(); // Call the API
         setArticles(fetchedArticles); // Set the articles in state
         setLoading(false); // Set loading to false
-      } catch (error) {
-        console.error("Failed to fetch articles", error);
+      } catch (err) {
+        console.error("Failed to fetch articles:", err);
+        setError("Could not load news at this time. Please try again later.");
         setLoading(false);
       }
     };
@@ -60,12 +62,15 @@ export default function Home() {
         {/* News Section */}
         <div className="mt-8 w-full max-w-7xl">
           <h2 className="text-2xl font-semibold mb-4">Latest AI & Finance News</h2>
+          
           {loading ? (
             <p>Loading news...</p>
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
           ) : validArticles.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {validArticles.map((article, index) => (
-                <div key={index} className="mb-8">
+                <article key={index} className="mb-8">
                   <a href={article.url} target="_blank" rel="noopener noreferrer">
                     <CustomImage
                       src={article.urlToImage || "/images/placeholder.jpg"} // Use placeholder if no image
@@ -79,7 +84,7 @@ export default function Home() {
                       {article.description || "No description available."} {/* Fallback for missing description */}
                     </p>
                   </a>
-                </div>
+                </article>
               ))}
             </div>
           ) : (
