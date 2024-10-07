@@ -17,8 +17,11 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".",  // Base directory is the root of the project
     "paths": {
-      "@/*": ["./*"]
+      "@/components/*": ["app/components/*"],  // Alias for components
+      "@/services/*": ["app/services/*"],      // Alias for services
+      "@/*": ["./*"]  // Generic alias for all other files at the root level
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
