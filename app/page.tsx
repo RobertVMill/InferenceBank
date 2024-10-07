@@ -7,7 +7,7 @@ import Image from "next/image";
 
 type Article = {
   title: string;
-  description: string;
+  description: string | null;
   url: string;
   urlToImage: string | null;
 };
@@ -69,13 +69,15 @@ export default function Home() {
                   <a href={article.url} target="_blank" rel="noopener noreferrer">
                     <CustomImage
                       src={article.urlToImage || "/images/placeholder.jpg"} // Use placeholder if no image
-                      alt={article.title}
+                      alt={article.title || "News article"} // Descriptive alt text
                       width={600}
                       height={400}
                       className="rounded-lg object-cover mb-4"
                     />
                     <h3 className="text-xl font-semibold">{article.title}</h3>
-                    <p className="text-gray-600">{article.description}</p>
+                    <p className="text-gray-600">
+                      {article.description || "No description available."} {/* Fallback for missing description */}
+                    </p>
                   </a>
                 </div>
               ))}
