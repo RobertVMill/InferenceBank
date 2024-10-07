@@ -1,4 +1,16 @@
-const FeaturedArticles = ({ articles }) => {
+type Article = {
+    id: number;
+    title: string;
+    snippet: string;
+    imageUrl: string;
+    link: string;
+  };
+  
+  type FeaturedArticlesProps = {
+    articles: Article[];
+  };
+  
+  const FeaturedArticles = ({ articles }: FeaturedArticlesProps) => {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
         {articles.slice(0, 2).map((article) => (
