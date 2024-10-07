@@ -13,7 +13,7 @@ type NewsFeedProps = {
   articles: Article[];
 };
 
-const NewsFeed = ({ articles }) => {
+const NewsFeed = ({ articles }: NewsFeedProps) => { // Apply the NewsFeedProps type here
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {articles.slice(2).map((article) => (
@@ -23,4 +23,4 @@ const NewsFeed = ({ articles }) => {
     );
   };
   
-  export default NewsFeed;
+export default NewsFeed;
