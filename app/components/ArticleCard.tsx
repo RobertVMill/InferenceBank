@@ -6,6 +6,11 @@ type Article = {
   snippet: string;
   imageUrl?: string; // Optional because some articles might not have an image
   link: string;
+  source: {
+    name: string;
+    id?: string; // Source ID for optional icon mapping
+  };
+  publishedAt: string;
 };
 
 type ArticleCardProps = {
@@ -23,10 +28,20 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
     return snippet;
   };
 
+  // Format the date
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
   return (
     <div className="p-4 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
       {/* Image with fallback */}
-      <div className="w-full h-40 overflow-hidden rounded-lg">
+      <div className="w-full h-40 relative overflow-hidden rounded-lg">
         <Image
           src={article.imageUrl || placeholderImage}
           alt={article.title}
@@ -43,6 +58,20 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
       <p className="text-sm text-gray-600 mt-2">
         {truncateSnippet(article.snippet, 120)}
       </p>
+
+      {/* Source and Date */}
+      <div className="flex justify-between items-center mt-4 text-sm text-gray-500">
+        <span className="flex items-center">
+          {/* Placeholder for Source Icon */}
+          <img
+            src="/images/source-icon-placeholder.png" // Add actual source icon logic here
+            alt={article.source.name}
+            className="h-6 w-6 rounded-full mr-2"
+          />
+          {article.source.name}
+        </span>
+        <span>{formatDate(article.publishedAt)}</span>
+      </div>
 
       {/* Read more link */}
       <a
