@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { fetchNewsArticles } from "@/services/newsService";
 import CustomImage from "@/components/CustomImage";
-import Image from "next/image";
 import ChatInterface from "@/components/ChatInterface";
 
 type Article = {
@@ -17,6 +16,10 @@ export default function Home() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isChatOpen, setIsChatOpen] = useState<boolean>(false); // Track chat visibility
+
+  // Toggle chat visibility
+  const toggleChat = () => setIsChatOpen(!isChatOpen);
 
   // Fetch news articles when the component mounts
   useEffect(() => {
@@ -40,28 +43,22 @@ export default function Home() {
   );
 
   return (
-    <div className="grid grid-rows-[auto_1fr_auto] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-sans bg-gray-50">
+    <div className="relative min-h-screen">
       {/* Chat Interface */}
-      <section className="w-full max-w-7xl flex flex-col items-center mb-12">
-        <ChatInterface />
-      </section>
+      <ChatInterface isChatOpen={isChatOpen} toggleChat={toggleChat} />
 
-      <main className="w-full max-w-7xl mx-auto flex flex-col gap-8 items-center sm:items-start">
-        <div className="flex items-center justify-center w-full">
-          <Image
-            className="dark:invert"
-            src="/images/IB.png"
-            alt="InferenceBank logo"
-            width={200}
-            height={50}
-            priority
-          />
-        </div>
+      {/* Main content area, dynamically adjust when chat is open */}
+      <main
+        className={`w-full max-w-7xl mx-auto flex flex-col gap-8 items-center sm:items-start transition-all duration-300 ${
+          isChatOpen ? "sm:pr-96" : "" // Add padding-right when chat is open
+        }`}
+      >
         <h1 className="text-3xl sm:text-4xl font-bold text-center sm:text-left">
           Welcome to InferenceBank
         </h1>
         <p className="text-lg sm:text-xl text-center sm:text-left max-w-xl">
-          Stay ahead with the latest AI-driven financial insights, personalized to your preferences.
+          Stay ahead with the latest AI-driven financial insights, personalized
+          to your preferences.
         </p>
 
         {/* News Section */}

@@ -1,99 +1,127 @@
-import { useState } from 'react';
+import { useState } from "react";
+import { ChatBubbleLeftIcon } from "@heroicons/react/24/solid"; // Adjusted icon import for Heroicons v2
 
-const ChatInterface = () => {
-  const [input, setInput] = useState('');
-  const [messages, setMessages] = useState<{ role: string, content: string }[]>([]); // Chat history
+const ChatInterface = ({ isChatOpen, toggleChat }: { isChatOpen: boolean; toggleChat: () => void }) => {
+  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState<{ role: string; content: string }[]>(
+    []
+  );
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    // Add the user's message to the chat history
-    const userMessage = { role: 'user', content: input };
+    const userMessage = { role: "user", content: input };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
 
     setLoading(true);
 
     try {
-      // Send the user input to the OpenAI API
-      const response = await fetch('/api/chat', {
-        method: 'POST',
+      const response = await fetch("/api/chat", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          messages: [...messages, userMessage], // Include all past messages in the request
+          messages: [...messages, userMessage],
         }),
       });
 
       const data = await response.json();
 
-      // Validate the assistant message format
       if (data && data.message && data.message.role && data.message.content) {
         const assistantMessage = data.message;
         setMessages((prevMessages) => [...prevMessages, assistantMessage]);
       } else {
-        console.error('Invalid assistant message format:', data);
+        console.error("Invalid assistant message format:", data);
         setMessages((prevMessages) => [
           ...prevMessages,
-          { role: 'assistant', content: 'Error: Could not retrieve a valid response. Please try again.' },
+          {
+            role: "assistant",
+            content:
+              "Error: Could not retrieve a valid response. Please try again.",
+          },
         ]);
       }
     } catch (error) {
-      console.error('Failed to fetch OpenAI response:', error);
+      console.error("Failed to fetch OpenAI response:", error);
       setMessages((prevMessages) => [
         ...prevMessages,
-        { role: 'assistant', content: 'Sorry, there was an error. Please try again.' },
+        {
+          role: "assistant",
+          content: "Sorry, there was an error. Please try again.",
+        },
       ]);
     } finally {
       setLoading(false);
-      setInput(''); // Clear the input field
+      setInput("");
     }
   };
 
   return (
-    <div className="max-w-xl w-full mx-auto p-4 border rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold mb-4">Chat with AI</h2>
+    <>
+      {/* Chat toggle button */}
+      <button
+        className="fixed bottom-4 right-4 bg-blue-500 text-white rounded-full p-4 shadow-lg hover:bg-blue-700 transition"
+        onClick={toggleChat} // Toggle chat visibility
+      >
+        <ChatBubbleLeftIcon className="h-6 w-6" />
+      </button>
 
-      {/* Chat history with scrollable container */}
-      <div className="chat-box mb-4 max-h-64 overflow-y-auto border p-2 rounded-lg bg-gray-50">
-        {messages.map((message, index) => (
-          <div
-            key={index}
-            className={`mb-2 ${message?.role === 'user' ? 'text-right' : 'text-left'}`} // Handle undefined role
-          >
-            <p
-              className={`inline-block px-4 py-2 rounded-lg ${
-                message?.role === 'user' ? 'bg-blue-100' : 'bg-gray-100'
+      {/* Chat interface as a wider shelf */}
+      <div
+        className={`fixed top-0 right-0 h-full bg-white shadow-lg transform transition-transform duration-300 ${
+          isChatOpen ? "translate-x-0" : "translate-x-full"
+        } w-96`} // Increased width to 24rem (w-96)
+      >
+        <div className="p-4 border-b flex justify-between items-center">
+          <h2 className="text-lg font-semibold">Chat with AI</h2>
+          <button onClick={toggleChat} className="text-gray-500">
+            ✖
+          </button>
+        </div>
+
+        {/* Chat history */}
+        <div className="chat-box p-4 flex-grow overflow-y-auto">
+          {messages.map((message, index) => (
+            <div
+              key={index}
+              className={`mb-2 ${
+                message.role === "user" ? "text-right" : "text-left"
               }`}
             >
-              {message?.content || 'No content available.'} {/* Handle undefined content */}
-            </p>
-          </div>
-        ))}
-        {loading && <p>Loading...</p>}
-      </div>
+              <p
+                className={`inline-block px-4 py-2 rounded-lg ${
+                  message.role === "user" ? "bg-blue-400" : "bg-gray-200"
+                }`}
+              >
+                {message.content || "No content available."}
+              </p>
+            </div>
+          ))}
+          {loading && <p>Loading...</p>}
+        </div>
 
-      {/* Input and button section */}
-      <form onSubmit={handleSubmit} className="flex items-center">
-        <textarea
-          className="flex-1 p-2 border rounded-lg max-h-24 overflow-y-auto"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask AI anything..."
-          required
-          rows={1}
-        />
-        <button
-          type="submit"
-          className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700"
-          disabled={loading}
-        >
-          Send
-        </button>
-      </form>
-    </div>
+        {/* Input area */}
+        <form onSubmit={handleSubmit} className="p-4 border-t flex items-center">
+          <textarea
+            className="flex-1 p-2 border rounded-lg"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Ask AI anything..."
+            required
+          />
+          <button
+            type="submit"
+            className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700"
+            disabled={loading}
+          >
+            Send
+          </button>
+        </form>
+      </div>
+    </>
   );
 };
 

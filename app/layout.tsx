@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import Navbar from "@/components/Navbar"; // Import the Navbar component
+import Navbar from "@/components/Navbar"; // Sidebar/Navbar component
 import "./globals.css";
 
 // Load custom fonts
@@ -15,7 +15,7 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-// Update metadata
+// Metadata for SEO
 export const metadata: Metadata = {
   title: "InferenceBank",
   description: "AI-driven financial insights platform",
@@ -31,11 +31,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}
       >
-        {/* Sidebar Navbar */}
+        {/* Navbar component alone, without extra sidebar */}
         <Navbar />
 
-        {/* Main content area with margin-left to avoid overlap */}
-        <div className="ml-64 mt-4"> {/* Adjusted margin-left to account for the sidebar width */}
+        {/* Main content area with padding to account for the sidebar */}
+        <div className="ml-64 mt-4">
           <main className="pt-16 container mx-auto px-4 sm:px-6 lg:px-8">
             {children}
           </main>
