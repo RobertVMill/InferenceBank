@@ -1,15 +1,12 @@
-import Image from 'next/image'; // Use Next.js Image for optimization
+import Image from 'next/image';
 
 type Article = {
   id: number;
   title: string;
   snippet: string;
-  imageUrl?: string; // Optional because some articles might not have an image
+  imageUrl?: string;
   link: string;
-  source: {
-    name: string;
-    id?: string; // Source ID for optional icon mapping
-  };
+  source: { name: string };
   publishedAt: string;
 };
 
@@ -20,32 +17,14 @@ type ArticleCardProps = {
 const ArticleCard = ({ article }: ArticleCardProps) => {
   const placeholderImage = '/images/placeholder.jpg'; // Placeholder image path
 
-  // Helper function to truncate the snippet
-  const truncateSnippet = (snippet: string, maxLength: number) => {
-    if (snippet.length > maxLength) {
-      return snippet.substring(0, maxLength) + '...';
-    }
-    return snippet;
-  };
-
-  // Format the date
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
-
   return (
     <div className="p-4 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
       {/* Image with fallback */}
-      <div className="w-full h-40 relative overflow-hidden rounded-lg">
+      <div className="w-full h-40 overflow-hidden rounded-lg">
         <Image
           src={article.imageUrl || placeholderImage}
           alt={article.title}
-          layout="fill" // Next.js Image optimization
+          layout="fill"
           objectFit="cover"
           className="rounded-lg"
         />
@@ -56,21 +35,13 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
 
       {/* Article Snippet */}
       <p className="text-sm text-gray-600 mt-2">
-        {truncateSnippet(article.snippet, 120)}
+        {article.snippet}
       </p>
 
-      {/* Source and Date */}
-      <div className="flex justify-between items-center mt-4 text-sm text-gray-500">
-        <span className="flex items-center">
-          {/* Placeholder for Source Icon */}
-          <img
-            src="/images/source-icon-placeholder.png" // Add actual source icon logic here
-            alt={article.source.name}
-            className="h-6 w-6 rounded-full mr-2"
-          />
-          {article.source.name}
-        </span>
-        <span>{formatDate(article.publishedAt)}</span>
+      {/* Display Source and Published Date */}
+      <div className="mt-4 text-xs text-gray-500">
+        <p>Source: {article.source.name}</p>
+        <p>Published on: {new Date(article.publishedAt).toLocaleDateString()}</p>
       </div>
 
       {/* Read more link */}
