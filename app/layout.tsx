@@ -29,14 +29,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}
       >
+        {/* Sidebar Navbar */}
         <Navbar />
 
-        {/* Main content with mobile-friendly adjustments */}
-        <main className="pt-16 container mx-auto px-4 sm:px-6 lg:px-8">
-          {children}
-        </main>
+        {/* Main content area with margin-left to avoid overlap */}
+        <div className="ml-64 mt-4"> {/* Adjusted margin-left to account for the sidebar width */}
+          <main className="pt-16 container mx-auto px-4 sm:px-6 lg:px-8">
+            {children}
+          </main>
+        </div>
       </body>
     </html>
   );

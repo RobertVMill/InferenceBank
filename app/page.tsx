@@ -40,21 +40,23 @@ export default function Home() {
   );
 
   return (
-    <div className="grid grid-rows-[auto_1fr_auto] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-sans">
+    <div className="grid grid-rows-[auto_1fr_auto] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-sans bg-gray-50">
       {/* Chat Interface */}
-      <section className="w-full flex flex-col items-center">
+      <section className="w-full max-w-7xl flex flex-col items-center mb-12">
         <ChatInterface />
       </section>
 
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/images/IB.png"
-          alt="InferenceBank logo"
-          width={200}
-          height={50}
-          priority
-        />
+      <main className="w-full max-w-7xl mx-auto flex flex-col gap-8 items-center sm:items-start">
+        <div className="flex items-center justify-center w-full">
+          <Image
+            className="dark:invert"
+            src="/images/IB.png"
+            alt="InferenceBank logo"
+            width={200}
+            height={50}
+            priority
+          />
+        </div>
         <h1 className="text-3xl sm:text-4xl font-bold text-center sm:text-left">
           Welcome to InferenceBank
         </h1>
@@ -62,13 +64,16 @@ export default function Home() {
           Stay ahead with the latest AI-driven financial insights, personalized to your preferences.
         </p>
 
-        <div className="mt-8 w-full max-w-7xl">
-          <h2 className="text-2xl font-semibold mb-4">Latest AI & Finance News</h2>
-          
+        {/* News Section */}
+        <div className="mt-8 w-full">
+          <h2 className="text-2xl font-semibold mb-4 text-center sm:text-left">
+            Latest AI & Finance News
+          </h2>
+
           {loading ? (
-            <p>Loading news...</p>
+            <p className="text-center">Loading news...</p>
           ) : error ? (
-            <p className="text-red-500">{error}</p>
+            <p className="text-red-500 text-center">{error}</p>
           ) : validArticles.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {validArticles.map((article, index) => (
@@ -90,12 +95,13 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <p>No articles found.</p>
+            <p className="text-center">No articles found.</p>
           )}
         </div>
       </main>
 
-      <footer className="row-start-3 flex flex-col sm:flex-row gap-4 sm:gap-6 items-center justify-center mt-10">
+      {/* Footer */}
+      <footer className="w-full max-w-7xl flex flex-col sm:flex-row gap-4 sm:gap-6 items-center justify-center mt-10">
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
           href="/profile"
